@@ -3,44 +3,69 @@ package algorithms.haffman.java;
 import java.util.Arrays;
 
 /**
- * Дерево Хаффмана
+ * Дерево Хаффмана.
  */
 class HaffmanTree {
 
-    private Tree haffmanTree;
+    private final Tree haffmanTree;
 
     HaffmanTree(Node[] frequencyTable){
-        createOneNodeTreeForest(frequencyTable);
+        Tree[] forest = createOneNodeTreeForest(frequencyTable);
+        PriorityQueueTrees priorityQueue = createPriorityQueue(forest);
+        haffmanTree = createHaffmanTree(priorityQueue);
     }
 
-    // создание леса 1-узловых деревьев из массива узлов
-    private void createOneNodeTreeForest(Node[] frequencyTable) {
+    /**
+     * Создание массива одноузловых деревьев из таблицы частотности
+     * узлов.
+     * @param frequencyTable таблица частотности.
+     * @return массив одноузловых деревьев.
+     */
+    private Tree[] createOneNodeTreeForest(Node[] frequencyTable) {
         Tree[] forest = new Tree[frequencyTable.length];
         Arrays.setAll(forest, (int i) -> new Tree(frequencyTable[i]));
-        createPriorityQueue(forest);
+        return forest;
     }
 
-    // приоритетная очередь деревьев
-    private void createPriorityQueue(Tree[] forest) {
+    /**
+     * Создание приоритетной очереди из массива деревьев для
+     * сортировки деревьев по приоритету узловых элементов.
+     * @param forest массив одноузловых деревьев.
+     * @return приоритетная сортированная очередь одноузловых деревьев.
+     */
+    private PriorityQueueTrees createPriorityQueue(Tree[] forest) {
         PriorityQueueTrees priorityQueue = new PriorityQueueTrees(forest.length);
         Arrays.stream(forest).forEach(priorityQueue::sortedTreeInsert);
-        createHaffmanTree(priorityQueue);
+        return priorityQueue;
     }
 
-    // создние дерева Хаффмана
-    private void createHaffmanTree(PriorityQueueTrees priorityQueue){
+    /**
+     * Создание дерева Хаффмана путем построения дерева из извлеченных элементов
+     * приоритетной очереди (деревьев) и объединения их в одно дерево,
+     * с внесением, вновь образованного дерева, в приоритетную очередь.
+     * Т.о. количество деревьев в приоритетной очереди сокращается, а деревья,
+     * вставляемые в очередь растут.
+     * Единственное оставшееся в очереди дерево является деревом Хаффмана.
+     * @param priorityQueue приоритетная очередедь деревьев
+     * @return дерево Хаффмана
+     */
+    private Tree createHaffmanTree(PriorityQueueTrees priorityQueue){
+        Tree transformTree = null;
+
         while(!priorityQueue.isEmpty()){
             Tree one = priorityQueue.remove();
             Tree two;
             if(!priorityQueue.isEmpty()){
                 two = priorityQueue.remove();
             }else{
-                return;
+                return transformTree;
             }
             Tree tree = new Tree();
-            haffmanTree = tree.combineTree2in1(one, two);
-            priorityQueue.sortedTreeInsert(haffmanTree);
+            transformTree = tree.transform2in1(one, two);
+            priorityQueue.sortedTreeInsert(transformTree);
         }
+
+        return transformTree;
     }
 
     Tree getCodeTree(){

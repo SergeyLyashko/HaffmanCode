@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Создание таблицы кодов
+ * Кодовая таблица символов.
  */
 class CodeTable {
 
@@ -14,17 +14,20 @@ class CodeTable {
         codeTable = new HashMap<>();
     }
 
-    // добавление кода в таблицу
-    void addCode(String code, char ch){
+    /**
+     * Добавление ячейки таблицы
+     * @param code двоичный код добавляемого символа
+     * @param ch добавляемый в ячейку символ
+     */
+    void addCodeCell(String code, char ch){
         codeTable.put(code, ch);
     }
 
-    // получение символа по коду
-    char getChar(String code){
-        return codeTable.get(code);
-    }
-
-    // получение кода по символу
+    /**
+     * Возвращает код соответствующего символа из таблицы
+     * @param ch запрашиваемый символ
+     * @return строковое представление кода запрашиваемого символа
+     */
     String getCode(char ch){
         return codeTable.keySet().stream().filter((String key) -> ch == codeTable.get(key)).findFirst().get();
     }

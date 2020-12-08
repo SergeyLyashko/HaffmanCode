@@ -1,11 +1,10 @@
 package algorithms.haffman.java;
 
-import java.util.Stack;
 /**
  * Дерево
  */
-
 class Tree {
+
     private final Node root;
 
     Tree(){
@@ -20,68 +19,35 @@ class Tree {
         return root;
     }
 
-    // комбинирование 2 деревьев в 1 с суммарной частотой
-    Tree combineTree2in1(Tree one, Tree two){
-        int frequencySum = one.getRootNode().getFrequencyValue() + two.getRootNode().getFrequencyValue();
+    /**
+     * Преобразование 2 деревьев в 1 новое дерево с суммарной частотой
+     * двух входных деревьев.
+     * @return преобразованное дерево
+     */
+    Tree transform2in1(Tree oneTree, Tree twoTree){
+        int frequencySum = oneTree.getRootNode().getFrequencyValue() + twoTree.getRootNode().getFrequencyValue();
         root.setFrequencyValue(frequencySum);
-        //root.setLetter('*');
-        // левое поддерево
-        Node oneNode = one.getRootNode();
-        oneNode.setCode("0");
-        root.setLeftChild(oneNode);
-        // правое поддерево
-        Node twoNode = two.getRootNode();
-        twoNode.setCode("1");
-        root.setRightChild(twoNode);
+
+        // установка левого потомка
+        Node left = setChildCode(oneTree, "0");
+        root.setLeftChild(left);
+
+        // установка правого потомка
+        Node right = setChildCode(twoTree, "1");
+        root.setRightChild(right);
+
         return this;
     }
 
-    // вывод дерева на экран
-    void displayTree(){
-        Stack<Node> globalStack = new Stack<>();
-        globalStack.push(root);
-        int nBlanks = 32;
-        boolean isRowEmpty = false;
-        System.out.println(
-                "....................................................................");
-        while(!isRowEmpty){
-            Stack<Node> localStack = new Stack<>();
-            isRowEmpty = true;
-            for(int j=0; j<nBlanks; j++){
-                System.out.print(' ');
-            }
-            while(!globalStack.isEmpty()){
-                Node temp = globalStack.pop();
-                if(temp != null){
-                    if(temp.isLeaf()){
-                        System.out.print(temp.getLetter());
-                        System.out.print("<"+temp.getCode()+">");
-                    }else{
-                        System.out.print(temp.getLetter());
-                        System.out.print("<"+temp.getCode()+">");
-                    }
-                    localStack.push(temp.getLeftChild());
-                    localStack.push(temp.getRightChild());
-
-                    if(temp.getLeftChild()!= null || temp.getRightChild()!= null){
-                        isRowEmpty = false;
-                    }
-                }else{
-                    System.out.print("  ");
-                    localStack.push(null);
-                    localStack.push(null);
-                }
-                for(int j=0; j<nBlanks*2-2; j++){
-                    System.out.print(' ');
-                }
-            }
-            System.out.println();
-            nBlanks /= 2;
-            while(!localStack.isEmpty()){
-                globalStack.push(localStack.pop());
-            }
-        }
-        System.out.println(
-                "....................................................................");
+    /**
+     * Установка кода в корневой узел
+     * @param tree дерево для преобразования
+     * @param code код элемента
+     * @return узел с кодом
+     */
+    private Node setChildCode(Tree tree, String code){
+        Node node = tree.getRootNode();
+        node.setCode(code);
+        return node;
     }
 }
