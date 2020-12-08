@@ -1,15 +1,16 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 /**
- * Узел
- * @author Korvin
+ * Узел дерева
  */
 class Node {
+
+    private static final String DEFAULT_CODE = "";
     private Node leftChild;
     private Node rightChild;
     private char letter;
     private int frequency;
-    private String code = "";
+    private String code = DEFAULT_CODE;
 
     void setLeftChild(Node calculateCode){
         this.leftChild = calculateCode;
@@ -53,9 +54,5 @@ class Node {
 
     boolean isLeaf(){
         return leftChild == null && rightChild == null;
-    }
-
-    void displayNode(){
-        System.out.printf("{%s} ", letter);
     }
 }

@@ -1,18 +1,17 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 /**
  * Кодовая таблица Хаффмана
- * @author Korvin
  */
-class HaffmanCode {
+class HaffmanCodeTable {
 
+    private static final String DEFAULT_CODE = "";
     private final CodeTable codeTable;
-    private final String code = "";
     private FrequencyTable frequency;
     private HaffmanTree haffmanTree;
     private Node root;
 
-    HaffmanCode(){
+    HaffmanCodeTable(){
         codeTable = new CodeTable();
     }
 
@@ -20,11 +19,19 @@ class HaffmanCode {
     String codeText(String text){
         createFrequencyTable(text);
         createHaffmanTree(frequency.getTable());
-        //test вывод дерева
-        //haffmanTree.getCodeTree().displayTree();
         root = haffmanTree.getCodeTree().getRootNode();
-        addCodeToTable(root, code);
+        addCodeToTable(root, DEFAULT_CODE);
         return createCodeString();
+    }
+
+    // создание таблицы частотности
+    private void createFrequencyTable(String text) {
+        frequency = new FrequencyTable(text);
+    }
+
+    // создание дерева Хаффмана
+    private void createHaffmanTree(Node[] frequencyTable){
+        haffmanTree = new HaffmanTree(frequencyTable);
     }
 
     // кодирование текста в таблицу
@@ -72,15 +79,6 @@ class HaffmanCode {
             builder.append(tableCode);
         }
         return builder.toString();
-    }
-
-    // создание таблицы частотности
-    private void createFrequencyTable(String text) {
-        frequency = new FrequencyTable(text);
-    }
-    // создание дерева Хаффмана
-    private void createHaffmanTree(Node[] frequencyTable){
-        haffmanTree = new HaffmanTree(frequencyTable);
     }
 
     // вывод текста в двоичном коде (без сжатия)

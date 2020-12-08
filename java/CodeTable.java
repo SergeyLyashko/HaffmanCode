@@ -1,11 +1,10 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Создание таблицы кодов
- * @author Korvin
  */
 class CodeTable {
 

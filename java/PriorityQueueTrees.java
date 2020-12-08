@@ -1,41 +1,52 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 /**
  * Приоритетная очередь деревьев
- * @author Korvin
+ * Создается для сортировки деревьев по частоте
+ * используемых элементов
  */
 class PriorityQueueTrees {
 
-    private final Tree[] array;
-    private int nElems;
+    private final Tree[] forest;
+    // количество деревьев
+    private int treeCount;
 
     public PriorityQueueTrees(int maxSize){
-        array = new Tree[maxSize];
+        forest = new Tree[maxSize];
     }
 
-    // вставка деревьев с сортировкой
+    /**
+     * Вставка деревьев и сортировка их по частоте
+     * используемых элементов (символов) текста
+     * @param tree дерево элементов
+     */
     void sortedTreeInsert(Tree tree){
-        int i;
-        if(nElems == 0){
-            array[nElems++] = tree;
+        int treeIndex;
+        if(treeCount == 0){
+            forest[treeCount++] = tree;
         }else{
-            for(i=nElems-1; i>=0; i--){
-                if(tree.getRootNode().getFrequencyValue() > array[i].getRootNode().getFrequencyValue()){
-                    array[i+1] = array[i];
+            for(treeIndex = treeCount -1; treeIndex>=0; treeIndex--){
+                if(tree.getRootNode().getFrequencyValue() > forest[treeIndex].getRootNode().getFrequencyValue()){
+                    forest[treeIndex+1] = forest[treeIndex];
                 }else{
                     break;
                 }
             }
-            array[i+1] = tree;
-            nElems++;
+            forest[treeIndex+1] = tree;
+            treeCount++;
         }
     }
-    // извлечение наименее используемого элемента
+
+    /**
+     * Извлечение элемента (дерева) с наименьшим приоритетом
+     * (наименее используемого в тексте) из очереди
+     * @return дерево наименьшего приоритета
+     */
     Tree remove(){
-        return array[--nElems];
+        return forest[--treeCount];
     }
 
     public boolean isEmpty(){
-        return nElems == 0;
+        return treeCount == 0;
     }
 }

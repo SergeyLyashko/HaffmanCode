@@ -1,25 +1,20 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 import java.util.Arrays;
 
 /**
  * Дерево Хаффмана
- * @author Korvin
  */
 class HaffmanTree {
 
     private Tree haffmanTree;
-    private final Node[] frequencyTable;
-    private PriorityQueueTrees priorityQueue;
 
     HaffmanTree(Node[] frequencyTable){
-        this.frequencyTable = frequencyTable;
-        createOneNodeTreeForest();
-        createHaffmanTree();
+        createOneNodeTreeForest(frequencyTable);
     }
 
     // создание леса 1-узловых деревьев из массива узлов
-    private void createOneNodeTreeForest() {
+    private void createOneNodeTreeForest(Node[] frequencyTable) {
         Tree[] forest = new Tree[frequencyTable.length];
         Arrays.setAll(forest, (int i) -> new Tree(frequencyTable[i]));
         createPriorityQueue(forest);
@@ -27,22 +22,23 @@ class HaffmanTree {
 
     // приоритетная очередь деревьев
     private void createPriorityQueue(Tree[] forest) {
-        priorityQueue = new PriorityQueueTrees(forest.length);
+        PriorityQueueTrees priorityQueue = new PriorityQueueTrees(forest.length);
         Arrays.stream(forest).forEach(priorityQueue::sortedTreeInsert);
+        createHaffmanTree(priorityQueue);
     }
 
     // создние дерева Хаффмана
-    private void createHaffmanTree(){
-        Tree one, two;
+    private void createHaffmanTree(PriorityQueueTrees priorityQueue){
         while(!priorityQueue.isEmpty()){
-            one = priorityQueue.remove();
+            Tree one = priorityQueue.remove();
+            Tree two;
             if(!priorityQueue.isEmpty()){
                 two = priorityQueue.remove();
             }else{
                 return;
             }
             Tree tree = new Tree();
-            haffmanTree = tree.combineTreeWithFrequencySum(one, two);
+            haffmanTree = tree.combineTree2in1(one, two);
             priorityQueue.sortedTreeInsert(haffmanTree);
         }
     }

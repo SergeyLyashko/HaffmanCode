@@ -1,58 +1,72 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 import java.util.Arrays;
 
 /**
- * частотная таблица для данных
- * @author Korvin
+ * Частотная таблица для данных
  */
 class FrequencyTable {
     private final char[] lettersArray;
-    private Node[] table;
+    private Node[] currentTable;
     private int tableElement;
 
     FrequencyTable(String input){
         this.lettersArray = input.toCharArray();
         createFrequencyTable();
     }
+
     // создание таблицы частотности
     private void createFrequencyTable(){
-        Node newNode;
         for(int i=0; i<lettersArray.length; i++){
             int count = 1;
+            // поиск количества одинаковых символов
             for(int j=i+1; j<lettersArray.length-1; j++){
                 if(lettersArray[i] == lettersArray[j]){
                     count++;
                 }
             }
-            if(i==0){
-                newNode = new Node();
-                newNode.setLetter(lettersArray[i]);
-                newNode.setFrequencyValue(count);
-                tableElement++;
-                table = new Node[tableElement];
-                table[0] = newNode;
-            }else if(isNotContains(lettersArray[i])){
-                tableElement++;
-                Node[] newTable = new Node[tableElement];
-                newNode = new Node();
-                newNode.setLetter(lettersArray[i]);
-                newNode.setFrequencyValue(count);
-                System.arraycopy(table, 0, newTable, 0, table.length);
-                newTable[table.length] = newNode;
-                table = newTable;
-            }
+            addTableElement(i, count);
         }
     }
+
+    private void addTableElement(int index, int count){
+        if(index==0){
+            addStartElement(count);
+        }else if(isNotContains(lettersArray[index])){
+            addNewElement(index, count);
+        }
+    }
+
+    private void addStartElement(int count){
+        Node newNode = new Node();
+        newNode.setLetter(lettersArray[0]);
+        newNode.setFrequencyValue(count);
+        tableElement++;
+        currentTable = new Node[tableElement];
+        currentTable[0] = newNode;
+    }
+
+    private void addNewElement(int index, int count){
+        tableElement++;
+        Node[] newTable = new Node[tableElement];
+        Node newNode = new Node();
+        newNode.setLetter(lettersArray[index]);
+        newNode.setFrequencyValue(count);
+        System.arraycopy(currentTable, 0, newTable, 0, currentTable.length);
+        // последний элемент таблицы
+        newTable[currentTable.length] = newNode;
+        currentTable = newTable;
+    }
+
     // проверка на дубликаты
     private boolean isNotContains(char ch){
-        return Arrays.stream(table).noneMatch((Node element) -> element.getLetter() == ch);
+        return Arrays.stream(currentTable).noneMatch((Node element) -> element.getLetter() == ch);
     }
 
     Node[] getTable(){
-        return Arrays.copyOf(table, table.length);
+        return currentTable;
     }
 
     char[] getTextInCharArray(){
-        return Arrays.copyOf(lettersArray, lettersArray.length);
+        return lettersArray;
     }
 }

@@ -1,10 +1,10 @@
-package algorithms.haffman;
+package algorithms.haffman.java;
 
 import java.util.Stack;
 /**
  * Дерево
- * @author Korvin
  */
+
 class Tree {
     private final Node root;
 
@@ -21,17 +21,15 @@ class Tree {
     }
 
     // комбинирование 2 деревьев в 1 с суммарной частотой
-    Tree combineTreeWithFrequencySum(Tree one, Tree two){
-        int frequencySum = one.getRootNode().getFrequencyValue() +
-                two.getRootNode().getFrequencyValue();
-
+    Tree combineTree2in1(Tree one, Tree two){
+        int frequencySum = one.getRootNode().getFrequencyValue() + two.getRootNode().getFrequencyValue();
         root.setFrequencyValue(frequencySum);
-        root.setLetter('*');
+        //root.setLetter('*');
         // левое поддерево
         Node oneNode = one.getRootNode();
         oneNode.setCode("0");
         root.setLeftChild(oneNode);
-        // правое подерево
+        // правое поддерево
         Node twoNode = two.getRootNode();
         twoNode.setCode("1");
         root.setRightChild(twoNode);
@@ -46,13 +44,13 @@ class Tree {
         boolean isRowEmpty = false;
         System.out.println(
                 "....................................................................");
-        while(isRowEmpty == false){
+        while(!isRowEmpty){
             Stack<Node> localStack = new Stack<>();
             isRowEmpty = true;
             for(int j=0; j<nBlanks; j++){
                 System.out.print(' ');
             }
-            while(globalStack.isEmpty() == false){
+            while(!globalStack.isEmpty()){
                 Node temp = globalStack.pop();
                 if(temp != null){
                     if(temp.isLeaf()){
@@ -79,7 +77,7 @@ class Tree {
             }
             System.out.println();
             nBlanks /= 2;
-            while(localStack.isEmpty() == false){
+            while(!localStack.isEmpty()){
                 globalStack.push(localStack.pop());
             }
         }
